@@ -1,0 +1,2927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Stokra — Kasir & Rekap Untung Bersih Warung Otomatis di HP</title>
+  <meta name="description" content="Aplikasi kasir PWA offline-first untuk warung kelontong & kios sembako. Catat 3 detik, rekap laba bersih otomatis, sekali bayar Rp99.000 tanpa biaya bulanan.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://stokra.id">
+  <meta property="og:title" content="Stokra — Kasir & Rekap Untung Bersih Warung Otomatis di HP">
+  <meta property="og:description" content="Ubah HP biasa jadi mesin kasir warung. Rekap laba bersih 1 detik, offline lancar, sekali bayar Rp99.000 tanpa langganan.">
+  <meta property="og:image" content="lp-assets/hero.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pemilik warung kelontong tersenyum memegang HP menggunakan aplikasi kasir Stokra">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="Stokra">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://stokra.id">
+  <meta name="twitter:title" content="Stokra — Kasir & Rekap Untung Bersih Warung Otomatis di HP">
+  <meta name="twitter:description" content="Aplikasi kasir PWA offline-first warung kelontong. Tanpa ketik manual, rekap laba otomatis, sekali bayar Rp99.000 seumur hidup.">
+  <meta name="twitter:image" content="lp-assets/hero.jpg">
+  <meta name="twitter:image:alt" content="Dashboard kasir warung Stokra di layar HP">
+
+  <!-- JSON-LD Product Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Stokra Web-App POS Warung",
+    "description": "Aplikasi Web-App POS & Offline Stock Tracker untuk pemilik warung kelontong dan toko sembako di Indonesia. Sekali bayar tanpa langganan bulanan.",
+    "image": "lp-assets/hero.jpg",
+    "brand": {
+      "@type": "Brand",
+      "name": "Stokra"
+    },
+    "sku": "stokra-pos-app",
+    "offers": {
+      "@type": "Offer",
+      "url": "https://stokra.id#pricing",
+      "priceCurrency": "IDR",
+      "price": "99000",
+      "availability": "https://schema.org/InStock",
+      "priceValidUntil": "2026-12-31",
+      "seller": {
+        "@type": "Organization",
+        "name": "Stokra"
+      }
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   Stokra Landing Page Stylesheet
+   Brand Visual Identity: Deep Slate + Emerald Green (Warm Retail Modern)
+   Mobile-First Architecture (Base: 320px)
+   ========================================================================== */
+
+:root {
+  /* BVI Color Palette */
+  --color-bg-base: #121824;
+  --color-bg-secondary: #1E2638;
+  --color-card-surface: #1E2638;
+  --color-primary: #10B981;
+  --color-primary-hover: #34D399;
+  --color-primary-dark: #059669;
+  --color-accent-amber: #F59E0B;
+  --color-proof-mint: #34D399;
+  --color-tech-cyan: #06B6D4;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-focus: rgba(16, 185, 129, 0.4);
+  --color-shadow-emerald: rgba(16, 185, 129, 0.35);
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Layout Constants */
+  --container-max: 1040px;
+  --section-pad-mobile: 48px 16px;
+  --section-pad-desktop: 80px 24px;
+  --radius-card: 14px;
+  --radius-btn: 999px;
+  --radius-badge: 8px;
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-bottom: 72px; /* For mobile sticky bar */
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Typography Helpers */
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 4px 12px;
+  border-radius: var(--radius-badge);
+  margin-bottom: 12px;
+}
+
+.section-tag--center {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.section-title--center {
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.section-subtitle--center {
+  text-align: center;
+}
+
+/* Primary CTA Button */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 28px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--color-shadow-emerald);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  min-height: 48px; /* Touch target minimum */
+  text-align: center;
+}
+
+.cta:hover {
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(52, 211, 153, 0.5);
+}
+
+.cta:active {
+  transform: translateY(0);
+}
+
+.cta--full {
+  width: 100%;
+}
+
+.cta--large {
+  padding: 18px 36px;
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   Section 1: Hero
+   ========================================================================== */
+.hero {
+  background: linear-gradient(180deg, #121824 0%, #172030 100%);
+  padding: 24px 0 40px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--color-proof-mint);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  margin-bottom: 16px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-proof-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-proof-mint);
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.hero__subhead {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  max-width: 580px;
+}
+
+.hero__cta-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.hero__cta {
+  width: 100%;
+  max-width: 360px;
+}
+
+.hero__proof-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.proof-bar__tag {
+  color: var(--color-proof-mint);
+  font-weight: 600;
+}
+
+.proof-bar__sep {
+  opacity: 0.5;
+}
+
+.hero__mockup-wrapper {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 12px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================================
+   Section 2: Testimonial Carousel (Proof-FIRST)
+   ========================================================================== */
+.testi-carousel {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.testi-carousel__track {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.testi-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.testi-card__emoji {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.testi-card__quote {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.testi-card__tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-tech-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Section 3: Pain Validation
+   ========================================================================== */
+.pain {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pain__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pain__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.pain__bullet-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.pain__text {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.pain__resolution {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  text-align: center;
+}
+
+.pain__resolution-text {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--color-accent-amber);
+}
+
+/* ==========================================================================
+   Section 4: Opportunity Reframe
+   ========================================================================== */
+.reframe {
+  background-color: #141C2B;
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reframe__contrast {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reframe__contrast-card {
+  padding: 20px;
+  border-radius: var(--radius-card);
+}
+
+.reframe__contrast-card--old {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.reframe__contrast-card--new {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.reframe__contrast-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.reframe__contrast-card--old .reframe__contrast-title {
+  color: #F87171;
+}
+
+.reframe__contrast-card--new .reframe__contrast-title {
+  color: var(--color-proof-mint);
+}
+
+.reframe__contrast-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.reframe__negations {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.negation-item {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.negation-item:last-of-type {
+  border-bottom: none;
+}
+
+.negation-stamp {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--color-proof-mint);
+  margin-top: 14px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.reframe__segments-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.reframe__segment-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reframe__segment-list li {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding-left: 20px;
+  position: relative;
+}
+
+.reframe__segment-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.reframe__segment-list li strong {
+  color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   Section 5: Package Intro
+   ========================================================================== */
+.package-intro {
+  background-color: var(--color-bg-base);
+  padding: 36px 0;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.package-intro__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.package-intro__desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Section 6: Core Deliverables
+   ========================================================================== */
+.deliverables {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.deliverables__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.deliverable-card {
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.deliverable-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.deliverable-card__num {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.deliverable-card__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.deliverable-card__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Section 7: Bonus Stack
+   ========================================================================== */
+.bonus {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bonus__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.bonus__item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 18px;
+}
+
+.bonus__badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent-amber);
+  background: rgba(245, 158, 11, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.bonus__name {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.bonus__desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.bonus__total-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 2px dashed rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  text-align: center;
+}
+
+.bonus__total-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.bonus__total-value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Section 8: Transformation / Bayangin
+   ========================================================================== */
+.transformation {
+  background-color: #151D2C;
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.transformation__narrative {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.transformation__narrative p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.transformation__narrative strong {
+  color: var(--color-text-primary);
+}
+
+.transformation__promise {
+  background: rgba(16, 185, 129, 0.06);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  padding: 18px;
+}
+
+.transformation__promise-lead {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.transformation__promise-close {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-proof-mint);
+}
+
+/* ==========================================================================
+   Section 9: Why Now / Scarcity Bullets
+   ========================================================================== */
+.why-now {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.why-now__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.why-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.why-bullet__icon {
+  width: 22px;
+  height: 22px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-proof-mint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.why-bullet__body {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.why-bullet__body strong {
+  color: var(--color-text-primary);
+}
+
+.scarcity-block {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.scarcity-block__title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-accent-amber);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.scarcity-block__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Section 10: Pricing
+   ========================================================================== */
+.pricing {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pricing-card {
+  background: var(--color-bg-base);
+  border: 2px solid var(--color-primary);
+  border-radius: 18px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+.pricing-card__badge {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  margin-bottom: 16px;
+}
+
+.pricing-card__title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.pricing-card__tiers {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pricing-tier {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.pricing-tier--anchor {
+  color: var(--color-text-muted);
+}
+
+.pricing-tier--standard {
+  color: var(--color-text-secondary);
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 8px;
+}
+
+.pricing-tier--special {
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+}
+
+.pricing-tier--special .pricing-tier__label {
+  color: var(--color-accent-amber);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.pricing-tier__price {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  line-height: 1.1;
+}
+
+.pricing-tier__note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.pricing-card__daily-cost {
+  background: rgba(52, 211, 153, 0.08);
+  border-radius: var(--radius-badge);
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.daily-cost__text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.daily-cost__text strong {
+  color: var(--color-proof-mint);
+}
+
+.pricing-card__inclusions {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pricing-card__inclusions li {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pricing-card__cta-wrap {
+  margin-bottom: 18px;
+}
+
+.pricing-card__warning {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+
+.warning-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent-amber);
+  margin-bottom: 6px;
+}
+
+.reasoning-text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Section 11: FAQ
+   ========================================================================== */
+.faq-wrap {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq__item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.faq__item[open] {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.faq__q {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 40px 16px 16px;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  position: relative;
+  line-height: 1.4;
+}
+
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.faq__q::after {
+  content: "+";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.faq__item[open] .faq__q::after {
+  content: "−";
+}
+
+.faq__a {
+  padding: 0 16px 16px 16px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 12px;
+}
+
+/* ==========================================================================
+   Section 12: Conversion CTA Strip
+   ========================================================================== */
+.form {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.conversion-strip {
+  background: linear-gradient(180deg, #1A2436 0%, #121824 100%);
+  border: 1px solid var(--color-border-focus);
+  border-radius: var(--radius-card);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.conversion-strip__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.conversion-strip__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.conversion-strip__pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.risk-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  padding: 6px 12px;
+  border-radius: var(--radius-btn);
+}
+
+.conversion-strip__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.conversion-strip__subtext {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Section 14: Footer
+   ========================================================================== */
+.footer {
+  background-color: #0E131D;
+  padding: 32px 0 24px;
+  color: var(--color-text-muted);
+}
+
+.live-ticker {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.ticker-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-proof-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--color-proof-mint);
+  flex-shrink: 0;
+}
+
+.footer__legal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.footer__disclaimer {
+  color: var(--color-text-muted);
+}
+
+.footer__recaptcha {
+  color: var(--color-text-muted);
+  opacity: 0.8;
+}
+
+.footer__copyright {
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Sticky Mobile CTA Bar */
+.sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1A2332;
+  border-top: 1px solid var(--color-border-focus);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 90;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.sticky-cta.is-visible {
+  transform: translateY(0);
+}
+
+.sticky-cta__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sticky-cta__badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-proof-mint);
+}
+
+.sticky-cta__price {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.sticky-cta__btn {
+  padding: 10px 20px;
+  font-size: 13px;
+  min-height: 40px;
+}
+
+/* ==========================================================================
+   Responsive Scaling (Tablet & Desktop)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .hero {
+    padding: 48px 0 64px;
+  }
+  .hero__title {
+    font-size: 38px;
+    max-width: 780px;
+  }
+  .hero__subhead {
+    font-size: 17px;
+  }
+  .section-title {
+    font-size: 30px;
+  }
+  .testi-carousel__track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .reframe__contrast {
+    flex-direction: row;
+  }
+  .reframe__contrast-card {
+    flex: 1;
+  }
+  .deliverables__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .bonus__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pricing-card {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 36px 32px;
+  }
+  .conversion-strip {
+    padding: 40px;
+  }
+  .conversion-strip__title {
+    font-size: 28px;
+  }
+  .sticky-cta {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero__title {
+    font-size: 44px;
+  }
+  .testi-carousel__track {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+<style>
+/* ==========================================================================
+   Stokra Landing Page Stylesheet
+   Brand Visual Identity: Deep Slate + Emerald Green (Warm Retail Modern)
+   Mobile-First Architecture (Base: 320px)
+   ========================================================================== */
+
+:root {
+  /* BVI Color Palette */
+  --color-bg-base: #121824;
+  --color-bg-secondary: #1E2638;
+  --color-card-surface: #1E2638;
+  --color-primary: #10B981;
+  --color-primary-hover: #34D399;
+  --color-primary-dark: #059669;
+  --color-accent-amber: #F59E0B;
+  --color-proof-mint: #34D399;
+  --color-tech-cyan: #06B6D4;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-focus: rgba(16, 185, 129, 0.4);
+  --color-shadow-emerald: rgba(16, 185, 129, 0.35);
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Layout Constants */
+  --container-max: 1040px;
+  --section-pad-mobile: 48px 16px;
+  --section-pad-desktop: 80px 24px;
+  --radius-card: 14px;
+  --radius-btn: 999px;
+  --radius-badge: 8px;
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-bottom: 72px; /* For mobile sticky bar */
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Typography Helpers */
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 4px 12px;
+  border-radius: var(--radius-badge);
+  margin-bottom: 12px;
+}
+
+.section-tag--center {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.section-title--center {
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.section-subtitle--center {
+  text-align: center;
+}
+
+/* Primary CTA Button */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 28px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--color-shadow-emerald);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  min-height: 48px; /* Touch target minimum */
+  text-align: center;
+}
+
+.cta:hover {
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(52, 211, 153, 0.5);
+}
+
+.cta:active {
+  transform: translateY(0);
+}
+
+.cta--full {
+  width: 100%;
+}
+
+.cta--large {
+  padding: 18px 36px;
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   Section 1: Hero
+   ========================================================================== */
+.hero {
+  background: linear-gradient(180deg, #121824 0%, #172030 100%);
+  padding: 24px 0 40px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--color-proof-mint);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  margin-bottom: 16px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-proof-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-proof-mint);
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.hero__subhead {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  max-width: 580px;
+}
+
+.hero__cta-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.hero__cta {
+  width: 100%;
+  max-width: 360px;
+}
+
+.hero__proof-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.proof-bar__tag {
+  color: var(--color-proof-mint);
+  font-weight: 600;
+}
+
+.proof-bar__sep {
+  opacity: 0.5;
+}
+
+.hero__mockup-wrapper {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 12px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================================
+   Section 2: Testimonial Carousel (Proof-FIRST)
+   ========================================================================== */
+.testi-carousel {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.testi-carousel__track {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.testi-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.testi-card__emoji {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.testi-card__quote {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.testi-card__tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-tech-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Section 3: Pain Validation
+   ========================================================================== */
+.pain {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pain__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pain__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.pain__bullet-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.pain__text {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.pain__resolution {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  text-align: center;
+}
+
+.pain__resolution-text {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--color-accent-amber);
+}
+
+/* ==========================================================================
+   Section 4: Opportunity Reframe
+   ========================================================================== */
+.reframe {
+  background-color: #141C2B;
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reframe__contrast {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reframe__contrast-card {
+  padding: 20px;
+  border-radius: var(--radius-card);
+}
+
+.reframe__contrast-card--old {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.reframe__contrast-card--new {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.reframe__contrast-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.reframe__contrast-card--old .reframe__contrast-title {
+  color: #F87171;
+}
+
+.reframe__contrast-card--new .reframe__contrast-title {
+  color: var(--color-proof-mint);
+}
+
+.reframe__contrast-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.reframe__negations {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.negation-item {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.negation-item:last-of-type {
+  border-bottom: none;
+}
+
+.negation-stamp {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--color-proof-mint);
+  margin-top: 14px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.reframe__segments-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.reframe__segment-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reframe__segment-list li {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding-left: 20px;
+  position: relative;
+}
+
+.reframe__segment-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.reframe__segment-list li strong {
+  color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   Section 5: Package Intro
+   ========================================================================== */
+.package-intro {
+  background-color: var(--color-bg-base);
+  padding: 36px 0;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.package-intro__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.package-intro__desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Section 6: Core Deliverables
+   ========================================================================== */
+.deliverables {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.deliverables__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.deliverable-card {
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.deliverable-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.deliverable-card__num {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.deliverable-card__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.deliverable-card__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Section 7: Bonus Stack
+   ========================================================================== */
+.bonus {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bonus__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.bonus__item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 18px;
+}
+
+.bonus__badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent-amber);
+  background: rgba(245, 158, 11, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.bonus__name {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.bonus__desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.bonus__total-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 2px dashed rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  text-align: center;
+}
+
+.bonus__total-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.bonus__total-value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Section 8: Transformation / Bayangin
+   ========================================================================== */
+.transformation {
+  background-color: #151D2C;
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.transformation__narrative {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.transformation__narrative p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.transformation__narrative strong {
+  color: var(--color-text-primary);
+}
+
+.transformation__promise {
+  background: rgba(16, 185, 129, 0.06);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  padding: 18px;
+}
+
+.transformation__promise-lead {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.transformation__promise-close {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-proof-mint);
+}
+
+/* ==========================================================================
+   Section 9: Why Now / Scarcity Bullets
+   ========================================================================== */
+.why-now {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.why-now__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.why-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.why-bullet__icon {
+  width: 22px;
+  height: 22px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-proof-mint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.why-bullet__body {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.why-bullet__body strong {
+  color: var(--color-text-primary);
+}
+
+.scarcity-block {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.scarcity-block__title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-accent-amber);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.scarcity-block__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Section 10: Pricing
+   ========================================================================== */
+.pricing {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pricing-card {
+  background: var(--color-bg-base);
+  border: 2px solid var(--color-primary);
+  border-radius: 18px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+.pricing-card__badge {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  margin-bottom: 16px;
+}
+
+.pricing-card__title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.pricing-card__tiers {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pricing-tier {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.pricing-tier--anchor {
+  color: var(--color-text-muted);
+}
+
+.pricing-tier--standard {
+  color: var(--color-text-secondary);
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 8px;
+}
+
+.pricing-tier--special {
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+}
+
+.pricing-tier--special .pricing-tier__label {
+  color: var(--color-accent-amber);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.pricing-tier__price {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--color-proof-mint);
+  line-height: 1.1;
+}
+
+.pricing-tier__note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.pricing-card__daily-cost {
+  background: rgba(52, 211, 153, 0.08);
+  border-radius: var(--radius-badge);
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.daily-cost__text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.daily-cost__text strong {
+  color: var(--color-proof-mint);
+}
+
+.pricing-card__inclusions {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pricing-card__inclusions li {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pricing-card__cta-wrap {
+  margin-bottom: 18px;
+}
+
+.pricing-card__warning {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+
+.warning-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent-amber);
+  margin-bottom: 6px;
+}
+
+.reasoning-text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Section 11: FAQ
+   ========================================================================== */
+.faq-wrap {
+  background-color: var(--color-bg-base);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq__item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.faq__item[open] {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.faq__q {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 40px 16px 16px;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  position: relative;
+  line-height: 1.4;
+}
+
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.faq__q::after {
+  content: "+";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.faq__item[open] .faq__q::after {
+  content: "−";
+}
+
+.faq__a {
+  padding: 0 16px 16px 16px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 12px;
+}
+
+/* ==========================================================================
+   Section 12: Conversion CTA Strip
+   ========================================================================== */
+.form {
+  background-color: var(--color-bg-secondary);
+  padding: var(--section-pad-mobile);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.conversion-strip {
+  background: linear-gradient(180deg, #1A2436 0%, #121824 100%);
+  border: 1px solid var(--color-border-focus);
+  border-radius: var(--radius-card);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.conversion-strip__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.conversion-strip__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.conversion-strip__pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.risk-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-proof-mint);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  padding: 6px 12px;
+  border-radius: var(--radius-btn);
+}
+
+.conversion-strip__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.conversion-strip__subtext {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Section 14: Footer
+   ========================================================================== */
+.footer {
+  background-color: #0E131D;
+  padding: 32px 0 24px;
+  color: var(--color-text-muted);
+}
+
+.live-ticker {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.ticker-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-proof-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--color-proof-mint);
+  flex-shrink: 0;
+}
+
+.footer__legal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.footer__disclaimer {
+  color: var(--color-text-muted);
+}
+
+.footer__recaptcha {
+  color: var(--color-text-muted);
+  opacity: 0.8;
+}
+
+.footer__copyright {
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Sticky Mobile CTA Bar */
+.sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1A2332;
+  border-top: 1px solid var(--color-border-focus);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 90;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.sticky-cta.is-visible {
+  transform: translateY(0);
+}
+
+.sticky-cta__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sticky-cta__badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-proof-mint);
+}
+
+.sticky-cta__price {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.sticky-cta__btn {
+  padding: 10px 20px;
+  font-size: 13px;
+  min-height: 40px;
+}
+
+/* ==========================================================================
+   Responsive Scaling (Tablet & Desktop)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .hero {
+    padding: 48px 0 64px;
+  }
+  .hero__title {
+    font-size: 38px;
+    max-width: 780px;
+  }
+  .hero__subhead {
+    font-size: 17px;
+  }
+  .section-title {
+    font-size: 30px;
+  }
+  .testi-carousel__track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .reframe__contrast {
+    flex-direction: row;
+  }
+  .reframe__contrast-card {
+    flex: 1;
+  }
+  .deliverables__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .bonus__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pricing-card {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 36px 32px;
+  }
+  .conversion-strip {
+    padding: 40px;
+  }
+  .conversion-strip__title {
+    font-size: 28px;
+  }
+  .sticky-cta {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero__title {
+    font-size: 44px;
+  }
+  .testi-carousel__track {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Section 1: Hero -->
+  <header class="hero" id="hero">
+    <div class="container hero__container">
+      <div class="hero__badge">
+        <span class="badge-dot"></span> Web-App Kasir Warung Offline-First
+      </div>
+      <h1 class="hero__title">
+        Cara Bikin Kasir Warung Rapi & Rekap Untung Bersih Otomatis dari HP!
+      </h1>
+      <p class="hero__subhead">
+        KHUSUS kamu pemilik warung sembako & toko eceran yang capek rekap buku kas, modal cuma 99rb sekali bayar.
+      </p>
+      
+      <div class="hero__cta-box">
+        <a href="http://lynk.id/rumahkreasi790/2jwwnp7v1xxg/checkout" class="cta cta--primary hero__cta">
+          <span class="cta__icon" aria-hidden="true">📦</span> Akses Stokra Sekarang!
+        </a>
+      </div>
+
+      <div class="hero__proof-bar">
+        <span class="proof-bar__tag">Aplikasi Web-App Siap Pakai</span>
+        <span class="proof-bar__sep">·</span>
+        <span class="proof-bar__stat">840+ warung kelontong sudah pakai setiap hari</span>
+      </div>
+
+      <div class="hero__mockup-wrapper">
+        <img src="https://i.ibb.co.com/4wZ8f4tL/Gemini-Generated-Image-x9va04x9va04x9va.jpg" alt="Antarmuka aplikasi kasir Stokra di HP Android menampilkan kasir cepat dan rekap untung bersih" class="hero__img" width="1200" height="630" loading="eager">
+      </div>
+    </div>
+  </header>
+
+  <!-- Section 2: Testimonial Carousel (Proof-FIRST) -->
+  <section class="testi-carousel" aria-labelledby="testi-h2">
+    <div class="container">
+      <div class="section-tag section-tag--center">BUKTI LANGSUNG DARI LAPANGAN</div>
+      <h2 id="testi-h2" class="section-title section-title--center">Warung Ramai, Catatan Tetap Rapi & Akurat</h2>
+      <p class="section-subtitle section-subtitle--center">Lihat cerita pemilik warung yang sudah berhenti pakai buku tulis kumal.</p>
+      
+      <div class="testi-carousel__track">
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">🔥</div>
+          <blockquote class="testi-card__quote">"Rekap malam SELESAI DALAM 1 DETIK!"</blockquote>
+          <div class="testi-card__tag">Hasil Nyata Warung</div>
+        </article>
+
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">📊</div>
+          <blockquote class="testi-card__quote">"Modal belanja vs laba TERPISAH OTOMATIS"</blockquote>
+          <div class="testi-card__tag">Bebas Uang Tekor</div>
+        </article>
+
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">✅</div>
+          <blockquote class="testi-card__quote">"Sinyal MATI TOTAL TETAP BISA TRANSAKSI"</blockquote>
+          <div class="testi-card__tag">Offline-First PWA</div>
+        </article>
+
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">🚀</div>
+          <blockquote class="testi-card__quote">"Pelanggan SENANG TERIMA STRUK DI WHATSAPP"</blockquote>
+          <div class="testi-card__tag">Warung Lebih Modern</div>
+        </article>
+
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">💡</div>
+          <blockquote class="testi-card__quote">"Cukup di HP JADUL, gak lemot sama sekali"</blockquote>
+          <div class="testi-card__tag">Super Ringan</div>
+        </article>
+
+        <article class="testi-card">
+          <div class="testi-card__emoji" aria-hidden="true">📦</div>
+          <blockquote class="testi-card__quote">"SEKALI BAYAR, gak ada tagihan bulanan!"</blockquote>
+          <div class="testi-card__tag">Hemat Biaya Kasir</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Pain Validation -->
+  <section class="pain" aria-labelledby="pain-h2">
+    <div class="container">
+      <div class="section-tag">REALITA LAPANGAN</div>
+      <h2 id="pain-h2" class="section-title">Coba jujur, kamu pernah kan kepikiran ini?</h2>
+      
+      <div class="pain__list">
+        <div class="pain__item">
+          <span class="pain__bullet-icon" aria-hidden="true">💭</span>
+          <p class="pain__text">Capek rekap buku kas kumal 2 jam tiap malam, pas dihitung uang di laci sering selisih...</p>
+        </div>
+        <div class="pain__item">
+          <span class="pain__bullet-icon" aria-hidden="true">💭</span>
+          <p class="pain__text">Barang sering lenyap atau stok sembako habis mendadak tanpa ketahuan siapa yang beli...</p>
+        </div>
+        <div class="pain__item">
+          <span class="pain__bullet-icon" aria-hidden="true">💭</span>
+          <p class="pain__text">Uang modal belanja kulakan sering kepakai buat keperluan dapur rumah tangga karena tercampur...</p>
+        </div>
+        <div class="pain__item">
+          <span class="pain__bullet-icon" aria-hidden="true">💭</span>
+          <p class="pain__text">Mati gaya saat antrean warung ramai karena harus ngitung belanjaan pakai kalkulator manual satu per satu...</p>
+        </div>
+      </div>
+
+      <div class="pain__resolution">
+        <p class="pain__resolution-text">Kalau begitu, ini SOLUSI yang kamu cari! 🔥</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Opportunity Reframe -->
+  <section class="reframe" aria-labelledby="reframe-h2">
+    <div class="container">
+      <div class="section-tag">PERUBAHAN SISTEM</div>
+      <h2 id="reframe-h2" class="section-title">Kenapa Ini Bisa Jadi Peluang Rapikan Warung Kamu? 💡</h2>
+      
+      <div class="reframe__contrast">
+        <div class="reframe__contrast-card reframe__contrast-card--old">
+          <h3 class="reframe__contrast-title">Cara Lama (Buku Tulis & Sewa Kasir)</h3>
+          <p class="reframe__contrast-text">
+            Dulu, kamu harus keluar uang sewa aplikasi kasir ratusan ribu tiap bulan, atau bertahan dengan buku kas manual yang gampang basah, sobek, dan bikin mata perih ngitung manual berjam-jam tiap tutup warung.
+          </p>
+        </div>
+        <div class="reframe__contrast-card reframe__contrast-card--new">
+          <h3 class="reframe__contrast-title">Cara Baru (Sistem Kasir Web-App Stokra)</h3>
+          <p class="reframe__contrast-text">
+            Sekarang? Cuma pakai browser di HP yang sudah kamu pegang, kamu punya kasir sentuh 3-klik yang langsung memotong stok, memisahkan uang modal vs untung bersih, dan jalan terus walau tanpa sinyal internet!
+          </p>
+        </div>
+      </div>
+
+      <div class="reframe__negations">
+        <div class="negation-item">✓ Tanpa perlu sewa software bulanan</div>
+        <div class="negation-item">✓ Tanpa pusing rumus pembukuan rumit</div>
+        <div class="negation-item">✓ Tanpa takut macet saat kuota habis</div>
+        <div class="negation-stamp">SEMUA SUDAH KAMI SIAPKAN! ✅</div>
+      </div>
+
+      <div class="reframe__segments">
+        <h3 class="reframe__segments-title">Ini kesempatan terbaik untuk kamu:</h3>
+        <ul class="reframe__segment-list">
+          <li><strong>Pemilik Warung Kelontong:</strong> Yang ingin tahu pasti berapa untung harian tanpa perlu begadang rekap buku kas.</li>
+          <li><strong>Penjaga Kios Sembako & Sosis Bakar:</strong> Yang butuh kasir super cepat agar pembeli tidak kelamaan antre di depan etalase.</li>
+          <li><strong>Toko Eceran Keluarga:</strong> Yang ingin menghentikan kebocoran barang dan memisahkan uang dagang dari uang dapur.</li>
+          <li><strong>Siapa saja pengusaha eceran:</strong> Yang ingin warungnya terlihat profesional, teratur, dan hemat biaya operasional.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Package Intro -->
+  <section class="package-intro" aria-labelledby="package-h2">
+    <div class="container">
+      <h2 id="package-h2" class="package-intro__title">Apa aja yang bakal kamu dapatkan?</h2>
+      <p class="package-intro__desc">
+        Kamu gak perlu buang waktu mikirin rumus kasir atau bayar programmer mahal dari nol. Kami sudah menyusun web-app tool kasir siap pakai lengkap untuk warungmu!
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 6: Core Deliverables -->
+  <section class="deliverables" aria-labelledby="deliverables-h2">
+    <div class="container">
+      <div class="section-tag">SISTEM UTAMA</div>
+      <h2 id="deliverables-h2" class="section-title">Fitur Kasir Utama Langsung Aktif di HP Kamu</h2>
+      
+      <div class="deliverables__grid">
+        <article class="deliverable-card">
+          <div class="deliverable-card__header">
+            <span class="deliverable-card__num">01</span>
+            <h3 class="deliverable-card__title">KASIR 3-KLIK LINTAS SESI</h3>
+          </div>
+          <p class="deliverable-card__desc">
+            Tekan gambar produk, masukkan jumlah barang, dan total transaksi langsung muncul instan tanpa kalkulator manual 🔥
+          </p>
+        </article>
+
+        <article class="deliverable-card">
+          <div class="deliverable-card__header">
+            <span class="deliverable-card__num">02</span>
+            <h3 class="deliverable-card__title">TEKNOLOGI PWA 100% OFFLINE-FIRST</h3>
+          </div>
+          <p class="deliverable-card__desc">
+            Tetap lancar melayani transaksi saat sinyal HP drop atau mati lampu, data aman tersimpan di memori lokal HP 🎯
+          </p>
+        </article>
+
+        <article class="deliverable-card">
+          <div class="deliverable-card__header">
+            <span class="deliverable-card__num">03</span>
+            <h3 class="deliverable-card__title">STRUK NOTA DIGITAL VIA WHATSAPP</h3>
+          </div>
+          <p class="deliverable-card__desc">
+            Kirim rincian belanja rapi langsung ke WhatsApp pembeli tanpa perlu modal beli mesin printer thermal mahal 🚀
+          </p>
+        </article>
+
+        <article class="deliverable-card">
+          <div class="deliverable-card__header">
+            <span class="deliverable-card__num">04</span>
+            <h3 class="deliverable-card__title">KALKULATOR PEMISAH MODAL & LABA BERSIH</h3>
+          </div>
+          <p class="deliverable-card__desc">
+            Otomatis tahu berapa nominal uang yang harus dibelanjakan lagi dan berapa untung bersih yang boleh kamu ambil ✅
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- Section 6: Transformation / Bayangin -->
+  <section class="transformation" aria-labelledby="transformation-h2">
+    <div class="container">
+      <div class="section-tag">TRANSFORMASI NYATA</div>
+      <h2 id="transformation-h2" class="section-title">Bayangin Ini deh...</h2>
+      
+      <div class="transformation__narrative">
+        <p>
+          Meja kasir warung yang biasanya penuh tumpukan nota sobek, kalkulator baterai soak, dan buku kas kumal, sekarang berubah jadi <strong>"pusat kendali warung modern"</strong> yang rapi hanya dari satu genggaman HP.
+        </p>
+        <p>
+          <strong>Pagi</strong> saat buka warung, kamu tinggal buka ikon Stokra di layar HP dalam 2 detik. <strong>Siang</strong> waktu pembeli sembako datang bertubi-tubi, kamu cukup sentuh 3 kali di layar, dan belanjaan terhitung otomatis. <strong>Sore</strong> hari, kamu langsung tahu stok minyak dan beras mana yang sudah menipis sebelum kehabisan. <strong>Malam</strong> hari waktu tutup warung? Cukup tekan 1 tombol, rekap omset dan untung bersih harian keluar seketika tanpa perlu pusing mikir rumus akuntansi.
+        </p>
+        <p>
+          Semua dilakukan langsung dari HP kesayanganmu, tanpa perlu beli printer mahal, tanpa ribet sewa server, dan tanpa bayar biaya bulanan yang mencekik.
+        </p>
+      </div>
+
+      <div class="transformation__promise">
+        <p class="transformation__promise-lead">
+          🚀 Ini bukan sekadar aplikasi kasir biasa. Ini adalah Sistem Kasir Web-App Offline-First yang sudah membantu ratusan pemilik warung tahu pasti untung bersih hariannya.
+        </p>
+        <p class="transformation__promise-close">
+          Dan sekarang... 💚 Giliran kamu merasakan kemudahan punya warung rapi dan tertata!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 9: Why Now / Scarcity Bullets -->
+  <section class="why-now" aria-labelledby="why-h2">
+    <div class="container">
+      <div class="section-tag">KEPUTUSAN TEPAT</div>
+      <h2 id="why-h2" class="section-title">Kenapa Harus Ambil Paket Stokra Sekarang?</h2>
+      
+      <div class="why-now__bullets">
+        <div class="why-bullet">
+          <div class="why-bullet__icon">✓</div>
+          <div class="why-bullet__body">
+            <strong>Bukan sekadar buku catatan rapuh!</strong> — Ini adalah sistem kasir web-app modern yang otomatis menghitung total dan potong stok!
+          </div>
+        </div>
+        <div class="why-bullet">
+          <div class="why-bullet__icon">✓</div>
+          <div class="why-bullet__body">
+            <strong>Bukan software kasir sewa bulanan!</strong> — Cuma sekali bayar 99 ribu, kamu bebas pakai seumur hidup tanpa tagihan rutin!
+          </div>
+        </div>
+        <div class="why-bullet">
+          <div class="why-bullet__icon">✓</div>
+          <div class="why-bullet__body">
+            <strong>Bebas hambatan sinyal!</strong> — Tetap berfungsi 100% lancar saat internet warung lemot atau mati total!
+          </div>
+        </div>
+      </div>
+
+      <div class="scarcity-block">
+        <h3 class="scarcity-block__title">KESEMPATAN TERAKHIR HARGA BATCH FOUNDER</h3>
+        <p class="scarcity-block__desc">
+          Kamu tahu sendiri kalau sewa software kasir online biayanya minimal Rp150.000 sampai Rp300.000 setiap bulan (itu berarti Rp1,8 Juta per tahun hanya untuk sewa alat!). TAPI HARI INI... Kamu bisa memiliki alat kasir Stokra dengan sistem siap pakai tanpa harus bayar biaya langganan sama sekali!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 10: Pricing -->
+  <section class="pricing" id="pricing" aria-labelledby="pricing-h2">
+    <div class="container">
+      <div class="pricing-card">
+        <div class="pricing-card__badge">PENAWARAN SPESIAL SEKALI BAYAR</div>
+        <h2 id="pricing-h2" class="pricing-card__title">Akses Penuh Web-App Stokra Seumur Hidup</h2>
+        
+        <div class="pricing-card__tiers">
+          <div class="pricing-tier pricing-tier--anchor">
+            <span class="pricing-tier__label">Total Nilai Paket:</span>
+            <span class="pricing-tier__val"><s>Rp 499.000</s></span>
+          </div>
+          <div class="pricing-tier pricing-tier--standard">
+            <span class="pricing-tier__label">Harga Normal Batch Selanjutnya:</span>
+            <span class="pricing-tier__val">Rp 199.000</span>
+          </div>
+          <div class="pricing-tier pricing-tier--special">
+            <span class="pricing-tier__label">Khusus 50 pembeli pertama HARI INI:</span>
+            <span class="pricing-tier__price">Rp 99.000</span>
+            <span class="pricing-tier__note">Sekali bayar untuk selamanya (Hemat 80%)</span>
+          </div>
+        </div>
+
+        <div class="pricing-card__daily-cost">
+          <p class="daily-cost__text">
+            Cuma setara <strong>Rp3.000-an sehari</strong> kalau dibagi sebulan pertama. Bahkan jauh lebih murah dari sebungkus kerupuk kaleng atau secangkir kopi saset di warung!
+          </p>
+        </div>
+
+        <ul class="pricing-card__inclusions">
+          <li>✓ AKSES WEB-APP STOKRA SELAMANYA</li>
+          <li>✓ BONUS 6 MODUL PANDUAN MANAJEMEN WARUNG</li>
+          <li>✓ BEBAS BIAYA LANGGANAN BULANAN SELAMANYA</li>
+        </ul>
+
+        <div class="pricing-card__cta-wrap">
+          <a href="http://lynk.id/rumahkreasi790/2jwwnp7v1xxg/checkout" class="cta cta--primary cta--full pricing__cta">
+            Ambil Promonya Sebelum Kehabisan
+          </a>
+        </div>
+
+        <div class="pricing-card__warning">
+          <p class="warning-text">⚠️ Ingat! Harga akan kembali ke Rp199.000 setelah kuota 50 pembeli terpenuhi!</p>
+          <p class="reasoning-text">
+            Kami menjaga kualitas server agar tetap optimal. Semakin lama kamu menunda, semakin lama kamu membuang waktu 2 jam tiap malam cuma buat rekap manual.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 11: FAQ -->
+  <section class="faq-wrap" aria-labelledby="faq-h2">
+    <div class="container">
+      <div class="section-tag section-tag--center">TANYA JAWAB</div>
+      <h2 id="faq-h2" class="section-title section-title--center">Yang Sering Ditanyain</h2>
+      <p class="section-subtitle section-subtitle--center">Jawaban jujur untuk pertanyaan yang sering ditanyakan pemilik warung.</p>
+
+      <div class="faq__list">
+        <details class="faq__item" open>
+          <summary class="faq__q">Ini produknya dalam bentuk apa?</summary>
+          <div class="faq__a">
+            <p>Ini adalah Web-App Tool siap pakai berbasis PWA (Progressive Web App)! Begitu pembayaran selesai, link akses langsung dikirim otomatis. Kamu tinggal buka di browser HP (Chrome/Safari) dan klik 'Tambahkan ke Layar Utama'. Tampilannya langsung jadi seperti aplikasi kasir biasa tanpa perlu unduh dari Playstore! 😊</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary class="faq__q">Aku bener-bener gak ngerti komputer & akuntansi, bisa gak?</summary>
+          <div class="faq__a">
+            <p>Bisa banget! Stokra dirancang khusus untuk pemilik warung kelontong pemula. Gak butuh rumus akuntansi atau laptop sama sekali. Cukup bisa pencet layar HP, masukkan nama barang, dan tekan selesai saat ada yang beli. Simpel dan membumi! 🤝</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary class="faq__q">Aksesnya selamanya atau ada biaya langganan bulanan?</summary>
+          <div class="faq__a">
+            <p>SELAMANYA! Kamu cukup bayar sekali Rp99.000 hari ini dan bisa pakai seterusnya seumur hidup. Gak ada biaya bulanan, gak ada biaya tahunan, dan update fitur baru tetap kamu dapatkan tanpa bayar lagi 👍</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary class="faq__q">Gimana cara dapet aksesnya setelah bayar?</summary>
+          <div class="faq__a">
+            <p>Otomatis dan instan! Setelah checkout berhasil, link akses web-app dan seluruh modul bonus langsung dikirim ke email kamu dalam hitungan menit. Kamu bisa langsung coba transaksi kasir pertama hari ini juga! 🚀</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary class="faq__q">Beneran bisa dipakai waktu internet di warung mati total?</summary>
+          <div class="faq__a">
+            <p>Bisa 100%! Berkat teknologi PWA Offline-First, seluruh pencatatan transaksi, pemotongan stok barang, dan rekap untung harian tetap berjalan normal walau HP dalam mode pesawat atau tanpa sinyal sama sekali. Data tersimpan aman di memori lokal HP kamu 😊</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 12: Conversion CTA Strip (NO FORM / NO PAYMENT BADGES - Scalev Injects) -->
+  <section class="form" id="checkout" aria-labelledby="form-h2">
+    <div class="container">
+      <div class="conversion-strip">
+        <h2 id="form-h2" class="conversion-strip__title">Mulai Rapikan Kasir & Rekap Untung Warung Hari Ini!</h2>
+        <p class="conversion-strip__desc">
+          Kamu sudah baca sampai sini, artinya kamu serius ingin menghentikan capeknya rekap buku kas manual tiap malam. Stokra hadir untuk memudahkan hidupmu sebagai juragan warung.
+        </p>
+
+        <div class="conversion-strip__pills">
+          <span class="risk-pill">✓ Sekali Bayar Rp99.000</span>
+          <span class="risk-pill">✓ Akses Penuh Selamanya</span>
+          <span class="risk-pill">✓ Langsung Aktif di HP</span>
+          <span class="risk-pill">✓ Garansi Uang Kembali Jika Tool Tidak Berfungsi</span>
+        </div>
+
+        <div class="conversion-strip__action">
+          <a href="http://lynk.id/rumahkreasi790/2jwwnp7v1xxg/checkout" class="cta cta--primary cta--large">
+            <span class="cta__icon" aria-hidden="true">📦</span> Akses Stokra Sekarang!
+          </a>
+          <p class="conversion-strip__subtext">Akses langsung dikirim ke email kamu setelah checkout selesai.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 14: Footer -->
+  <footer class="footer">
+    <div class="container">
+      <!-- Live Ticker -->
+      <div class="live-ticker" id="live-ticker" aria-live="polite">
+        <span class="ticker-dot"></span>
+        <span class="ticker-text" id="ticker-content">Pembelian Terverifikasi — Pak Joko (Warung Berkah, Solo) baru saja membeli Akses Stokra Rp99.000 3 menit yang lalu</span>
+      </div>
+
+      <!-- Legal & Trust -->
+      <div class="footer__legal">
+        <p class="footer__disclaimer">
+          *Disclaimer: Stokra adalah alat bantu pencatatan transaksi kasir dan manajemen stok barang warung. Hasil perapian dan keuntungan toko bergantung pada perputaran penjualan dan kedisiplinan pencatatan masing-masing pemilik usaha.
+        </p>
+        <p class="footer__recaptcha">
+          This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
+        </p>
+        <div class="footer__copyright">
+          <p>© 2026 Stokra. Seluruh hak cipta dilindungi undang-undang.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Mobile CTA Bar -->
+    <div class="sticky-cta" id="sticky-cta" role="region" aria-label="Akses Cepat Stokra">
+      <div class="sticky-cta__info">
+        <span class="sticky-cta__badge">SEKALI BAYAR</span>
+        <span class="sticky-cta__price">Rp 99.000</span>
+      </div>
+      <a href="http://lynk.id/rumahkreasi790/2jwwnp7v1xxg/checkout" class="cta cta--primary sticky-cta__btn">Beli Sekarang</a>
+    </div>
+  </footer>
+
+  <script>
+      // Sticky CTA trigger on scroll
+      window.addEventListener("scroll", function() {
+        const stickyBar = document.getElementById("sticky-cta");
+        if (stickyBar) {
+          if (window.scrollY > 450) {
+            stickyBar.classList.add("is-visible");
+          } else {
+            stickyBar.classList.remove("is-visible");
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
